@@ -27,6 +27,10 @@ class HomeScreen extends React.Component {
     return (
       <View>
         <Text>Home</Text>
+        <Button
+          title="Add note"
+          onPress={() => this.props.navigation.navigate('AddItem')}
+        />
         {this.state.items.map(item => (
           <Button
             key={item.id}
@@ -67,13 +71,38 @@ const ItemScreen = ({ navigation }) => (
 );
 ItemScreen.navigationOptions = ({ navigation }) => ({title: `Item #${navigation.getParam('id')}`})
 
+const AddItemScreen = ({navigation}) => (
+  <View style={styles.container}>
+         <TextInput
+          placeholder="Title"
+          returnKeyType="done"
+          style={styles.input}
+          onChangeText={this.titleChanged}
+         />
+         <TextInput
+           placeholder="Content"
+           multiline = {true}
+           numberOfLines = {4}
+           style={styles.input}
+           onChangeText={this.contentChanged}
+           />
+           <Button
+             title="Add note"
+             onPress={this.addNote}
+           />
+
+           <Button title="Go back" onPress={() => navigation.goBack()} />
+           </View>
+);
+AddItemScreen.navigationOptions = ({navigation}) => ({title: 'add item'})
+
 const Navigator = StackNavigator(
   {
     Home: {
       screen: HomeScreen,
     },
     AddItem: {
-      scree: AddItemScreen,
+      screen: AddItemScreen,
     },
     Item: {
       screen: ItemScreen,
@@ -89,41 +118,6 @@ export default class App extends React.Component {
   render() {
     return <Navigator />;
   }
-  // constructor() {
-  //   super();
-  //    this.state = {
-  //     title: '',
-  //     content: '',
-  //     items: [
-  //       { index: 1, title: `Title 1`, content: `Note 1`, done: false},
-  //       { index: 2, title: `Title 2`, content: `Note 2`, done: false},
-  //       { index: 3, title: `Title 3`, content: `Note 3`, done: true},
-  //       { index: 4, title: `Title 4`, content: `Note 4`, done: false},
-  //       { index: 5, title: `Title 5`, content: `Note 5`, done: true},
-  //       { index: 6, title: `Title 6`, content: `Note 6`, done: false},
-
-  //     ],
-  //   }
-  // }
-
-  // componentWillMount() {
-  //   // AsyncStorage.getItem(noteItems).then(items => this.setState({ items }));
-  // }
-    
-
-  // renderItem = ({item}) => (
-  //   <View style={styles.item}>
-  //     <Text style={styles.title}>{item.title}</Text>
-  //     <Text style={styles.content}>{item.content}</Text>
-  //     <TouchableOpacity onPress={() => this.deleteItem(item.index)}>
-  //       <MaterialIcons name="delete" size={16} color="red"/>
-  //     </TouchableOpacity>
-  //     <TouchableOpacity onPress={() => this.updateItem(item.index)}>
-  //       <MaterialIcons name="edit" size={16} color="red" />
-  //     </TouchableOpacity>
-  //   </View>
-  // );
-
   // render() {
   //   return (
   //     <View style={styles.container}>
