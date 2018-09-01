@@ -1,7 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TextInput, Button, AsyncStorage, TouchableOpacity } from 'react-native';
 import { Constants } from 'expo';
+import { MaterialIcons } from '@expo/vector-icons'
 
+const noteItems = 'devmeeting:text';
 
 export default class App extends React.Component {
   constructor() {
@@ -10,15 +12,19 @@ export default class App extends React.Component {
       title: '',
       content: '',
       items: [
-        { id: 1, title: `Title 1`, content: `Note 1`, done: false},
-        { id: 2, title: `Title 2`, content: `Note 2`, done: false},
-        { id: 3, title: `Title 3`, content: `Note 3`, done: true},
-        { id: 4, title: `Title 4`, content: `Note 4`, done: false},
-        { id: 5, title: `Title 5`, content: `Note 5`, done: true},
-        { id: 6, title: `Title 6`, content: `Note 6`, done: false},
+        { index: 1, title: `Title 1`, content: `Note 1`, done: false},
+        { index: 2, title: `Title 2`, content: `Note 2`, done: false},
+        { index: 3, title: `Title 3`, content: `Note 3`, done: true},
+        { index: 4, title: `Title 4`, content: `Note 4`, done: false},
+        { index: 5, title: `Title 5`, content: `Note 5`, done: true},
+        { index: 6, title: `Title 6`, content: `Note 6`, done: false},
 
       ],
     }
+  }
+
+  componentWillMount() {
+    // AsyncStorage.getItem(noteItems).then(items => this.setState({ items }));
   }
     
 
@@ -26,6 +32,10 @@ export default class App extends React.Component {
     <View style={styles.item}>
       <Text style={styles.title}>{item.title}</Text>
       <Text style={styles.content}>{item.content}</Text>
+      <TouchableOpacity onPress={() => this.deleteItem(item.index)}>
+        <MaterialIcons name="delete" size={16} color="red"/>
+      </TouchableOpacity>
+      <MaterialIcons name="edit" size={16} color="red" />
     </View>
   );
 
@@ -65,13 +75,20 @@ export default class App extends React.Component {
       content: text,
     }));
 
-  addNote = () => this.setState(state => ({
-    items: state.items.concat({
-      title: state.title,
-      content: state.content,
-      done: false,
-    })
-  }))
+  addNote = () => {
+    this.setState(state => ({
+      items: state.items.concat({
+        title: state.title,
+        content: state.content,
+        done: false,
+      })
+    }))
+    AsyncStorage.setItem(noteItems, this.state.items);
+  }
+
+  deleteItem = (index) => {
+    this.setState(this.state.items.filter((item, index) => index !== index))
+  }
 }
 
 const styles = StyleSheet.create({
